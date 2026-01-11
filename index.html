@@ -126,6 +126,24 @@ fetch('pytania.txt')
     render(); 
   });
 
+  
+//usuniecie ucznia w podsumowaniu
+function deleteStudent(student) {
+  if (confirm(`Na pewno chcesz usunąć dane ucznia ${student}?`)) {
+    db.collection("wyniki").doc(student).delete()
+      .then(() => {
+        alert(`Dane ucznia ${student} zostały usunięte.`);
+        showSummary(); // odświeżenie tabeli
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Błąd przy usuwaniu danych!");
+      });
+  }
+}
+
+
+  
 // Render pytania i przycisków
 function render() {
   document.getElementById('question').innerText = `(${current + 1}/${questions.length}) ${questions[current]}`;
@@ -211,30 +229,35 @@ function showSummary() {
     html += '</tr>';
 
     // Wiersze dla uczniów, którzy oceniali innych
-    snapshot.forEach(doc => {
-      const student = doc.id;
-      const data = doc.data();
-      const ans = data.answers || [];
-      html += `<tr><td>${student}</td>`;
+snapshot.forEach(doc => {
+  const student = doc.id;
+  const data = doc.data();
+  const ans = data.answers || [];
+  html += `<tr><td>${student}</td>`;
 
-      for (let j = 0; j < questions.length; j++) {
-        const val = ans[j] || '-';
-        let color = '';
-        if (val == 1 || val == 2) color = 'red';
-        else if (val == 3 || val == 4) color = 'orange';
-        else if (val == 5 || val == 6) color = 'green';
+  for (let j = 0; j < questions.length; j++) {
+    const val = ans[j] || '-';
+    let color = '';
+    if (val == 1 || val == 2) color = 'red';
+    else if (val == 3 || val == 4) color = 'orange';
+    else if (val == 5 || val == 6) color = 'green';
 
-        const displayVal = val !== '-' ? gradeMap[val] : '-';
-        html += `<td style="color:${color}; font-weight:bold">${displayVal}</td>`;
+    const displayVal = val !== '-' ? gradeMap[val] : '-';
+    html += `<td style="color:${color}; font-weight:bold">${displayVal}</td>`;
 
-        // liczymy średnią w tle
-        if (val !== '-') {
-          sums[j] += parseInt(val);
-          counts[j] += 1;
-        }
-      }
-      html += '</tr>';
-    });
+    if (val !== '-') {
+      sums[j] += parseInt(val);
+      counts[j] += 1;
+    }
+  }
+
+  // Dodaj przycisk Usuń
+  html += `<td><button onclick="deleteStudent('${student}')"
+               style="background:red;color:white;border:none;border-radius:5px;padding:5px;cursor:pointer">Usuń</button></td>`;
+
+  html += '</tr>';
+});
+
 
     // --- Dodanie wiersza ze średnią słownie ---
     html += '<tr style="font-weight:bold; background:#f0f0f0;"><td>Średnia</td>';
