@@ -63,6 +63,41 @@ input { width: 100%; padding: 15px; font-size: 18px; border-radius: 10px; border
   cursor: pointer;
   font-weight: bold;
 }
+
+  /* --- Media query dla ekranów wąskich (telefony) --- */
+@media (max-width: 480px) {
+  #question {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .answers {
+    grid-template-columns: 1fr; /* każda odpowiedź w osobnym wierszu */
+    gap: 10px;
+  }
+
+  .answers button {
+    font-size: 20px;
+    padding: 20px;
+  }
+
+  .nav button, #summaryBtn {
+    font-size: 18px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+  }
+
+  #summaryScreen table, #summaryScreen th, #summaryScreen td {
+    font-size: 12px; /* zmniejszenie tabeli na telefonie */
+  }
+
+  #summaryScreen {
+    padding: 10px;
+  }
+}
+
+
+  
 </style>
 </head>
 <body>
