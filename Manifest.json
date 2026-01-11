@@ -1,0 +1,8 @@
+{
+  "name": "Ocena ucznia",
+  "short_name": "Oceny",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2196f3"
+}
