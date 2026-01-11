@@ -188,7 +188,7 @@ function showSummary() {
       return;
     }
 
-    // Tablica do liczenia średnich dla każdego ucznia
+    // Tablica do sumowania ocen dla każdego ucznia
     const sums = Array(questions.length).fill(0);
     const counts = Array(questions.length).fill(0);
 
@@ -196,6 +196,7 @@ function showSummary() {
     for (let i = 1; i <= questions.length; i++) html += `<th>${i}</th>`;
     html += '</tr>';
 
+    // Wiersze dla uczniów, którzy oceniali innych
     snapshot.forEach(doc => {
       const student = doc.id;
       const data = doc.data();
@@ -212,6 +213,7 @@ function showSummary() {
         const displayVal = val !== '-' ? gradeMap[val] : '-';
         html += `<td style="color:${color}; font-weight:bold">${displayVal}</td>`;
 
+        // liczymy średnią w tle
         if (val !== '-') {
           sums[j] += parseInt(val);
           counts[j] += 1;
@@ -219,6 +221,20 @@ function showSummary() {
       }
       html += '</tr>';
     });
+
+    // --- Dodanie wiersza ze średnią słownie ---
+    html += '<tr style="font-weight:bold; background:#f0f0f0;"><td>Średnia</td>';
+    for (let j = 0; j < questions.length; j++) {
+      if (counts[j] === 0) {
+        html += `<td>-</td>`;
+      } else {
+        const avgNum = sums[j] / counts[j];
+        const avgRound = Math.round(avgNum); // zaokrąglenie do najbliższej liczby
+        const avgText = gradeMap[avgRound];
+        html += `<td>${avgText}</td>`;
+      }
+    }
+    html += '</tr>';
 
     tableDiv.innerHTML = html;
   }).catch(err => {
@@ -228,6 +244,7 @@ function showSummary() {
 
   document.getElementById('summaryScreen').style.display = 'block';
 }
+
 
 function closeSummary() {
   document.getElementById('summaryScreen').style.display = 'none';
