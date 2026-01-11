@@ -118,7 +118,12 @@ function showSummary() {
       const ans = obj.answers || [];
       html += `<tr><td>${student}</td>`;
       for (let j = 0; j < questions.length; j++) {
-        html += `<td>${ans[j] || '-'}</td>`;
+        const val = ans[j] || '-';
+        let color = '';
+        if (val == 1 || val == 2) color = 'red';
+        else if (val == 3 || val == 4) color = 'orange';
+        else if (val == 5 || val == 6) color = 'green';
+        html += `<td style="color:${color}; font-weight:bold">${val}</td>`;
       }
       html += '</tr>';
     }
@@ -129,6 +134,7 @@ function showSummary() {
 
   document.getElementById('summaryScreen').style.display = 'block';
 }
+
 
 function closeSummary() {
   document.getElementById('summaryScreen').style.display = 'none';
